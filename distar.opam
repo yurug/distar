@@ -1,0 +1,16 @@
+opam-version: "1.2"
+name: "distar"
+version: "0.1"
+
+maintainer: "Yann Régis-Gianas <yann.regis-gianas@irif.fr>"
+authors: [
+  "Yann Régis-Gianas <yann.regis-gianas@irif.fr>"
+  "Étienne Marais <etiennemarais@protonmail.com>"
+]
+  
+license: "GPL3"
+depends: [
+  "odoc"
+  "cmdliner"
+]
+
