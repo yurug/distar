@@ -10,7 +10,8 @@ authors: [
   
 license: "GPL3"
 depends: [
-  "odoc"
+  "jbuilder" {build}
+  "odoc" {doc}
   "cmdliner"
 ]
 

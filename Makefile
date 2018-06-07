@@ -7,24 +7,21 @@
 
 .PHONY: all build clean doc
 
-# importe les dépendances, compile et lance l'exécutable
-all: build run	
+# import dependencies and compile
+all: build 	
 
-# lance le programme
-run:
-	jbuilder exec distar
-
-# compile les fichiers  
+# compile files and prepare installation
 build:
-	jbuilder build src/distar.exe
+	jbuilder build @install
 	ln -sf _build/default/src bin
+	ln -sf bin/distar.exe distar
 
-# créer la documentation
+# generate doc
 doc:
 	jbuilder build @doc
 	ln -sf _build/default/_doc/_html doc
 
-# nettoie le répertoire et les liens
+# clean links and repositories
 clean: 
 	jbuilder clean
-	rm -f bin doc
+	rm -f bin doc distar
