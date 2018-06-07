@@ -14,9 +14,9 @@ all: build run
 run:
 	jbuilder exec distar
 
-# compile les fichiers  
+# compile les fichiers et prépare pour l'installation
 build:
-	jbuilder build src/distar.exe
+	jbuilder build @install
 	ln -sf _build/default/src bin
 
 # créer la documentation
