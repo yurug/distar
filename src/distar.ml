@@ -8,3 +8,6 @@
 (*  the POSIX standard. Please refer to the file COPYING for details.     *)
 (**************************************************************************)
 
+open Cmdliner
+
+let () = Term.(exit @@ eval Parser.cmd )
