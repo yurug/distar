@@ -1,8 +1,8 @@
-####################################
-# 	Makefile - distar          #
-#  	Copyright (C) 2018         #
-# Yan Régis-Gianas, Étienne Marais #
-####################################
+#####################################
+# 			Makefile - distar           #
+#  	    Copyright (C) 2018          #
+# Yann Régis-Gianas, Étienne Marais #
+#####################################
 
 .PHONY: all build clean doc
 
@@ -12,8 +12,7 @@ all: build
 # compile files and prepare installation
 build:
 	jbuilder build @install
-	ln -sf _build/default/src bin
-	ln -sf bin/distar.exe distar
+	ln -sf _build/install/default/bin bin
 
 # generate doc
 doc:
