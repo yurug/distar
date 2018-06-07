@@ -4,7 +4,6 @@
 # Yan Régis-Gianas, Étienne Marais #
 ####################################
 
-
 .PHONY: all build clean doc
 
 # import dependencies and compile
