@@ -3,31 +3,29 @@
 (*                                                                        *)
 (*  This is free software: you can redistribute it and/or modify it       *)
 (*  under the terms of the GNU General Public License, version 3.         *)
-(*                                                                        *)
-(*  Additional terms apply, due to the reproduction of portions of        *)
-(*  the POSIX standard. Please refer to the file COPYING for details.     *)
 (**************************************************************************)
 
 
 
 open Cmdliner
 
+(* Print argument values *)
+let print_files sources target =
+  Format.printf "distar\n\
+                 |-source(s): %s\n\
+                 |-target: %s\n"
+    (String.concat " / " sources) target
 
-(* print the value of the arguments passed through the command line
+
+(* Print the value of the arguments passed through the command line
    with [sources] and [target] *)
 let distar prompt sources target =
-  if not (Sys.file_exists target)
-  then
+  if not (Sys.file_exists target) then
     `Error (false, "You are using wrong source(s)")
+  else if prompt then
+    `Ok  (print_files sources target)
   else
-  if prompt
-  then
-    `Ok  (Printf.printf "distar\n\
-                         |-source(s): %s\n\
-                         |-target: %s\n"
-            (String.concat " / " sources) target)
-  else
-    `Ok (Printf.printf "Ok\n")
+    `Ok (Format.printf "Ok\n")
 
 (* Describe how sources must be read from the command line *)
 let sources =
@@ -46,7 +44,7 @@ let verbose =
   Arg.(value & flag & info ["v"; "verbose"]  ~doc)
 
 
-(* Create man, specify args and normalize command for cmdliner with const *)
+(* Create man, specify arguments and normalize command for cmdliner with const *)
 let cmd =
   let doc = "Track modification in code and update it in documentation" in
   let man =
