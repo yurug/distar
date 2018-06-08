@@ -21,7 +21,7 @@ let print_files sources target =
    with [sources] and [target] *)
 let distar prompt sources target =
   if not (Sys.file_exists target) then
-    `Error (false, "You are using wrong source(s)")
+    `Error (false, "You are using a wrong target")
   else if prompt then
     `Ok  (print_files sources target)
   else
