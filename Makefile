@@ -19,6 +19,11 @@ doc:
 	jbuilder build @doc
 	ln -sf _build/default/_doc/_html doc
 
+# Launch tests
+check:  
+	@jbuilder build @runtest
+	@make clean 1> /dev/null
+
 # Clean links and repositories
 clean: 
 	jbuilder clean
