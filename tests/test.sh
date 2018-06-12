@@ -1,10 +1,10 @@
+#!/bin/sh
+
 ###########################################
 #             Test - distar               #
 #           Copyright (C) 2018            #
 #   Yann Régis-Gianas - Étienne Marais    #
 ###########################################
-
-#!/bin/sh
 
 # Functions for printing
 print_error () {
@@ -16,7 +16,7 @@ print_ok () {
 }
 
 # Functions to calculate stats
-succes=0
+success=0
 failure=0
 total=0
 
@@ -30,6 +30,8 @@ failed () {
     total=$((total+1))
 }
 
+# Add a symbolic link with the executable
+ln -s ../src/distar.exe distar
 
 # Roam all the directories to launch test.sh
 echo -e "\n=== Situational tests ===\n"
@@ -38,7 +40,7 @@ do
      echo -e "--> \033[1;39m$dir\033[0m"
 
      # Launch local test 
-     sh $dir/test.sh
+     $dir/test.sh
 
      # Count sucess and failure
      if [ $? -eq 0 ];then
