@@ -1,18 +1,14 @@
 #!/bin/sh
-
-###########################################
-#             Test - distar               #
-#           Copyright (C) 2018            #
-#   Yann Régis-Gianas - Étienne Marais    #
-###########################################
+set -euC
+cd "$(dirname "$0")"
 
 # Functions for printing
 print_error () {
-    echo -e "- \033[1;31mFAILED\033[0m $1"
+    printf -- "\n|- \033[1;31mFAILED\033[0m\n"
 }
 
 print_ok () {
-    echo -e "- \033[1;32mOK\033[0m $1"
+    printf -- "\n|- \033[1;32mOK\033[0m\n"
 }
 
 # Functions to calculate stats
@@ -21,7 +17,7 @@ failure=0
 total=0
 
 succeed () {
-    success=$((succes+1))
+    success=$((success+1))
     total=$((total+1))
 }
 
@@ -37,17 +33,17 @@ ln -s ../src/distar.exe distar
 echo -e "\n=== Situational tests ===\n"
 for dir in */
 do
-     echo -e "--> \033[1;39m$dir\033[0m"
+     printf -- "--> \033[1;39m%s\033[0m" "$dir"
 
      # Launch local test 
-     $dir/test.sh
+     "$dir"/test.sh
 
      # Count sucess and failure
      if [ $? -eq 0 ];then
-         succeed
+         succeed 
          print_ok 
      else
-         failed
+         failed 
          print_error 
      fi
      echo -e #Add one line between tests

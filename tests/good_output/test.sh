@@ -1,16 +1,10 @@
 #!/bin/sh
 
-###########################################
-#             Test - distar               #
-#           Copyright (C) 2018            #
-#   Yann Régis-Gianas - Étienne Marais    #
-###########################################
-
-
-##  Test if the simple output is good
+set -euC
+cd "$(dirname "$0")"
 
 # Program output
-output=$(./distar good_output/source.ml good_output/target.html)
+output=$(../distar source.ml target.html)
 expected="Ok"
 
 # Ouput Test

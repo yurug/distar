@@ -1,11 +1,9 @@
-(jbuild_version 1)
-
 (alias
  ((name runtest)
   (action (run ./test.sh))
   (deps ((file ../src/distar.exe)
 
-         ;; Copy files to avoid file deletion
+         ;; Copy files to avoid file modifications
          (files_recursively_in ./)) 
  ))
 )

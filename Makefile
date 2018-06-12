@@ -1,10 +1,5 @@
-######################################
-#       Makefile - distar            #
-#  	Copyright (C) 2018           #
-# Yann Régis-Gianas - Étienne Marais #
-######################################
 
-.PHONY: all build clean doc
+.PHONY: all build clean doc check
 
 # Import dependencies and compile
 all: build 	
