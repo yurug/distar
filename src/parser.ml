@@ -9,15 +9,18 @@ let print_files sources target =
 
 (* Print wrong target error with cmdliner style *)
 let target_error target =
-  "DEST... arguments: no `"^target^"' file or directory\n\
-  \rUsage: distar [OPTION]... SOURCE... DEST\n\
-  \rTry `distar --help' for more information.\n"
+  "DEST... arguments: no `"^target^"' file or directory\n"
+
+(* Describe distar usages *)
+let usage () = 
+  "\rUsage: distar [OPTION]... SOURCE... DEST\n\
+   \rTry `distar --help' for more information.\n"
     
 (* Print the value of the arguments passed through the command line
    with [sources] and [target] *)
 let distar prompt sources target =
   if not (Sys.file_exists target) then
-    `Error (false, target_error target)
+    `Error (false, (target_error target)^(usage ()))
   else if prompt then
     `Ok  (print_files sources target)
   else
