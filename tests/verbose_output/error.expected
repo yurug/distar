@@ -1,0 +1,4 @@
+distar: DEST... arguments: no `none.md' file or directory
+        Usage: distar [OPTION]... SOURCE... DEST
+        Try `distar --help' for more information.
+        
