@@ -30,7 +30,7 @@ failed () {
 ln -s ../src/distar.exe distar
 
 # Roam all the directories to launch test.sh
-echo -e "\n=== Situational tests ===\n"
+printf "\n=== Situational tests ===\n\n"
 for dir in */
 do
      printf -- "--> \033[1;39m%s\033[0m" "$dir"
@@ -46,8 +46,8 @@ do
          failed 
          print_error 
      fi
-     echo -e #Add one line between tests
+     printf "\n" #Add one line between tests
 done
-echo "---------"
-echo "$success succeed, $failure failed, total : $total"
+printf -- "---------\n"
+printf "$success succeed, $failure failed, total : $total\n"
 
