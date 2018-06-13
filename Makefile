@@ -1,10 +1,5 @@
-######################################
-#       Makefile - distar            #
-#  	Copyright (C) 2018           #
-# Yann Régis-Gianas - Étienne Marais #
-######################################
 
-.PHONY: all build clean doc
+.PHONY: all build clean doc check
 
 # Import dependencies and compile
 all: build 	
@@ -18,6 +13,11 @@ build:
 doc:
 	jbuilder build @doc
 	ln -sf _build/default/_doc/_html doc
+
+# Launch tests
+check:  
+	@jbuilder build @runtest
+	@make clean 1> /dev/null
 
 # Clean links and repositories
 clean: 
