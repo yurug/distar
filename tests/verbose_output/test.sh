@@ -5,6 +5,10 @@ cd "$(dirname "$0")"
 
 
 # Function to test if the verbose mode prints correct outputs
+# $1 the output of the script ( stdout or stderr)
+# $2 source file used by distar
+# $3 target file used by distar
+# $4 name of .output and .expected files
 verbose_mode_test () {
     
     # Launch distar in verbose mode and store output in a file
@@ -29,7 +33,7 @@ verbose_mode_test () {
 
 
 
-# Test with good arguments
+# Test with an existing source and an existing target 
 verbose_mode_test 1 "source_1.ml" "target.md" "good_args" 
 
 # Test with wrong target
