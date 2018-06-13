@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euC
+set -uC
 cd "$(dirname "$0")"
 
 # Functions for printing
