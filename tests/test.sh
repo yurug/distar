@@ -4,11 +4,11 @@ cd "$(dirname "$0")"
 
 # Functions for printing
 print_error () {
-    printf -- "\n|- \033[1;31mFAILED\033[0m\n"
+    printf -- "|- \033[1;31mFAILED\033[0m\n"
 }
 
 print_ok () {
-    printf -- "\n|- \033[1;32mOK\033[0m\n"
+    printf -- "|- \033[1;32mOK\033[0m\n"
 }
 
 # Functions to calculate stats
@@ -33,7 +33,7 @@ ln -s ../src/distar.exe distar
 printf "\n=== Situational tests ===\n\n"
 for dir in */
 do
-     printf -- "--> \033[1;39m%s\033[0m" "$dir"
+     printf -- "--> \033[1;39m%s\033[0m\n" "$dir"
 
      # Launch local test 
      "$dir"/test.sh
