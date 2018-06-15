@@ -3,7 +3,7 @@
 set -u
 cd "$(dirname "$0")"
 
-# Code uses when the script ended
+# Code used when the script ends
 error_code=0
 
 
