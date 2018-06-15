@@ -3,6 +3,8 @@
 set -u
 cd "$(dirname "$0")"
 
+# Code uses when the script ended
+error_code=0
 
 
 # Verify the differences between two files and 
@@ -11,8 +13,8 @@ compare_file () {
     if [ $? -eq 0 ]; then
         printf "Test $1 - OK\n"
     else
-        printf "Error\n%s\n" "$output"
-        exit 1
+        printf "|-Error\n%s\n" "$output"
+        error_code=1
     fi
 }
 
@@ -22,9 +24,10 @@ compare_file () {
 
 
 
-
 # Verify if the program stdout prints the right message
 compare_file insert_reference.output insert_reference.expected
 
 # Verify if distar has inserted a reference to source.ml in target.html
-compare_file target.html target.html.expecte
+compare_file target.html target.html.expected
+
+exit $error_code
