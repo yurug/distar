@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euC
+set -uC
 cd "$(dirname "$0")"
 
 # Program output
@@ -14,5 +14,5 @@ then
 else
     echo -e "Ouput:\n$output"
     echo -e "Expected:\n$expected"
-    exit 127
+    exit 1
 fi

@@ -1,0 +1,3 @@
+distar: SOURCE... arguments: no `none.ml' file or directory
+Usage: distar [OPTION]... SOURCE... DEST
+Try `distar --help' for more information.
