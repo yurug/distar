@@ -2,6 +2,9 @@
 set -uC
 cd "$(dirname "$0")"
 
+# Error code
+error=0
+
 # Functions for printing
 print_error () {
     printf -- "|- \033[1;31mFAILED\033[0m\n"
@@ -24,6 +27,7 @@ succeed () {
 failed () {
     failure=$((failure+1))
     total=$((total+1))
+    error=1
 }
 
 # Add a symbolic link with the executable
@@ -51,3 +55,5 @@ done
 printf -- "---------\n"
 printf "$success succeed, $failure failed, total : $total\n"
 
+# If one test failed it exits with 1 else 0
+exit $error
