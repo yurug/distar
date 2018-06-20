@@ -4,6 +4,9 @@ set -u
 cd "$(dirname "$0")"
 
 # Code used when the script ends
+source "../error.sh"
+
+# Code used when the script ends
 error_code=0
 
 
@@ -20,12 +23,7 @@ verbose_mode_test_2 () {
 
     # If there is no difference between the files, diff return 0
     # else it returns 1
-    if [ $? -eq 0 ];  then
-        printf "|-Test $3 - OK\n"    
-    else
-        printf "|-Erro\n%s\n" "$output"
-        error_code=1
-    fi
+    show_and_update_error $1  $output
 }
 
 
@@ -38,7 +36,7 @@ verbose_mode_test_2 "source_1.ml" "none.md" "bad_target"
 # Test with wrong source
 verbose_mode_test_2 "none.ml" "target.md" "bad_source"
 
-exit $error_code
+exit_with_code
 
 
 
