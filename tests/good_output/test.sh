@@ -2,9 +2,10 @@
 
 set -uC
 cd "$(dirname "$0")"
+progdir="../../bin/"
 
 # Program output
-output=$(../distar source.ml target.html)
+output=$($progdir/distar source.ml target.html)
 expected="Ok"
 
 # Ouput Test

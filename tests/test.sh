@@ -31,7 +31,8 @@ failed () {
 }
 
 # Add a symbolic link with the executable
-ln -s ../src/distar.exe distar
+mkdir ../bin
+ln ../src/distar.exe ../bin/distar
 
 # Roam all the directories to launch test.sh
 printf "\n=== Situational tests ===\n\n"

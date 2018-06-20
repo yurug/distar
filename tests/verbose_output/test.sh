@@ -2,6 +2,7 @@
 
 set -u
 cd "$(dirname "$0")"
+progdir="../../bin/"
 
 # Code used when the script ends
 source "../error.sh"
@@ -16,14 +17,14 @@ error_code=0
 # $3 name of .output and .expected files
 verbose_mode_test_2 () {
 
-    ../distar -v "$1" "$2" > "$3".output 2>&1 
+    "$progdir"/distar -v "$1" "$2" > "$3".output 2>&1 
     
     # Keep diff output to compare in case of error
     output=$(diff -w "$3".output "$3".expected)
 
     # If there is no difference between the files, diff return 0
     # else it returns 1
-    show_and_update_error $1  $output
+    show_and_update_error $3  $output
 }
 
 
