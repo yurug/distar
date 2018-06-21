@@ -1,44 +1,79 @@
-(* tell if [x] is in [tab] bounds *)
-let in_array_bound tab x =
-  x >= 0 && x < (Array.length tab)
+(** Looklike allows you to find recurrent patterns in some lists *)
 
-(* give the value at position [i],[j] in [tab] *)
-let give_tab_value tab (i,j)=
-  if (in_array_bound tab i) && (in_array_bound tab.(i) j)
-  then tab.(i).(j)
-  else 0
-
-(* update *)
-let update_value tab (i,j) plus =
-  if plus then
-    tab.(i).(j) <- 1+ give_tab_value tab (i-1,j-1)  
-  else
-    tab.(i).(j)<- 0
-
-(* Create tab with size [x] [y] *)
-let create_tab x y = 
-  Array.make_matrix x y 0
-
-(* Compare two lines *)
-let compare_strings doc_line source_line =
-  (String.trim doc_line) = (String.trim source_line)
+(** Module type which allows comparing elements *)
+module type EqType = 
+sig
+  type t 
+  val equal : t -> t -> bool
+end
 
 
-let fill_array doc sources = 
-  let match_tab = create_tab (List.length doc) (List.length sources)
-  in  
-  let rec compare_and_fill (i,j) compare = function
-    | [] -> ()
-    | line::lines -> (
-        compare_strings compare line |> update_value match_tab (i,j);
-        compare_and_fill (i,j+1) compare lines
-      )
-  in 
-  let rec scroll_array i sources = function
-    | [] -> match_tab
-    | line::lines -> (
-        compare_and_fill (i,0) line sources ;
-        scroll_array (i+1) sources lines
-      )
-  in scroll_array 0 sources doc
+(** Module for looklike to find similarity between list *)
+module Make (E : EqType) =
+struct
+
+  (** Type to get pattern and its position *)
+  type index_string = {
+    mutable str : E.t list;
+    pos_doc :int ;
+    pos_src :int 
+  }
+
+  (** tell if [x] is in [tab] bounds *)
+  let in_array_bound tab x =
+    x >= 0 && x < (Array.length tab)
+
+  (** give the value at position [i],[j] in [tab] *)
+  let give_tab_value tab (i,j)=
+    if (in_array_bound tab i) && (in_array_bound tab.(i) j)
+    then tab.(i).(j)
+    else 0
+
+  (** update *)
+  let update_value tab (i,j) plus =
+    if plus then
+      tab.(i).(j) <- 1 + give_tab_value tab (i-1,j-1)  
+    else
+      tab.(i).(j) <- 0
+
+  (** Create tab with size [x] [y] *)
+  let create_tab x y = 
+    Array.make_matrix x y 0
+
+
+  (** Create and fill the array with the match between 
+      [doc] and [source] *)
+  let fill_array doc sources =
+    let table = create_tab (List.length doc) (List.length sources)
+    in 
+    List.iteri (fun i e1 -> (
+          List.iteri (fun j e2 -> (
+                E.equal e1 e2 |> update_value table (i,j))
+            ) doc )
+      ) sources ; table
+
+  (* Print for debug *)
+  let print_array tab = 
+    Array.iter (function e -> (
+          Array.iter (function e2 ->
+              Format.printf "%d " e2
+            ) e ; Format.printf "\n"
+        )) tab
+end
+
+(** Module with string simplify with trim *)
+module PureString = 
+struct
+  type t = string
+
+  let equal str1 str2 = 
+  (String.trim str1) = (String.trim str2)
+
+end
+
+(** Default module*)
+include Make(PureString)
+
+(* An exemple => *)
+let () = fill_array ["Hello" ; "Bye" ; "End"] ["Hello" ; "End" ; "Bye"] |> print_array
 
