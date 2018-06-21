@@ -14,7 +14,7 @@ struct
 
   (** Type to get pattern and its position *)
   type index_string = {
-    mutable str : E.t list;
+    mutable depot : E.t list;
     pos_doc :int ;
     pos_src :int 
   }
@@ -49,8 +49,19 @@ struct
     List.iteri (fun i e1 -> (
           List.iteri (fun j e2 -> (
                 E.equal e1 e2 |> update_value table (i,j))
-            ) doc )
-      ) sources ; table
+            ) sources )
+      ) doc ; table
+
+  (** Iteration which catches common values in
+      [doc] and [src] at [(i,j)] *)
+  let rec iter_diagonal tab (i,j) doc src = 
+    match (doc,src) with
+    | ([], _) | (_, []) -> []
+    | _ when give_tab_value tab (i,j) = 0 -> []
+    | ( l1::t1, l2::t2 ) -> (
+        update_value tab (i,j) false ; 
+        l1::(iter_diagonal tab (i+1,j+1) t1 t2)
+      )
 
   (* Print for debug *)
   let print_array tab = 
@@ -59,6 +70,7 @@ struct
               Format.printf "%d " e2
             ) e ; Format.printf "\n"
         )) tab
+
 end
 
 (** Module with string simplify with trim *)
@@ -67,7 +79,7 @@ struct
   type t = string
 
   let equal str1 str2 = 
-  (String.trim str1) = (String.trim str2)
+    (String.trim str1) = (String.trim str2)
 
 end
 
