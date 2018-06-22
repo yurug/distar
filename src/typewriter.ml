@@ -1,3 +1,7 @@
+(* Tell if two strings are equals *)
+let equal str1 str2 = 
+ (String.trim str1) = (String.trim str2)
+
 (* get a string list corresponding to the [file]
    content *)
 let lines_from file =
@@ -16,7 +20,7 @@ let search_and_add expr new_line content  =
   let rec search_aux acc = function
     | [] -> acc
     | line::lines ->
-      if line = expr then
+      if equal line expr then
         search_aux (acc @ [new_line] @ [line]) lines
       else
         search_aux (acc @ [line]) lines
@@ -47,5 +51,3 @@ let rec update_list_with content = function
 let update_file addition file =
   let content = lines_from file in
   update_list_with content addition |> write_in file
-
-
