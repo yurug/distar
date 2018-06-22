@@ -1,27 +1,32 @@
 (** Looklike allows you to find recurrent patterns in some lists *)
 
-(** Module type which allows comparing elements *)
+(** module type which allows comparing elements *)
 module type EqType = 
 sig
-  type t 
+  type t
   val equal : t -> t -> bool
+  val get_str : t -> string
 end
 
 
-(** Module for looklike to find similarity between list *)
+(** module for looklike to find similarity between list *)
 module Make (E : EqType) =
 struct
 
-  (** Type to get pattern and its position *)
+
+  (** OCaml type to get pattern and its position *)
   type index_string = {
-    mutable depot : E.t list;
+    depot : E.t list;
     pos_doc :int ;
     pos_src :int 
   }
 
+
+
   (** tell if [x] is in [tab] bounds *)
   let in_array_bound tab x =
     x >= 0 && x < (Array.length tab)
+
 
   (** give the value at position [i],[j] in [tab] *)
   let give_tab_value tab (i,j)=
@@ -29,19 +34,22 @@ struct
     then tab.(i).(j)
     else 0
 
-  (** update *)
-  let update_value tab (i,j) plus =
-    if plus then
+
+  (** update [tab] value at position [i][j]. If
+      [update] is false, it resets the value *)
+  let update_value tab (i,j) update =
+    if update then
       tab.(i).(j) <- 1 + give_tab_value tab (i-1,j-1)  
     else
       tab.(i).(j) <- 0
 
-  (** Create tab with size [x] [y] *)
+
+  (** create an array with size [x] [y] *)
   let create_tab x y = 
     Array.make_matrix x y 0
 
 
-  (** Create and fill the array with the match between 
+  (** create and fill the array with the match between 
       [doc] and [source] *)
   let fill_array doc sources =
     let table = create_tab (List.length doc) (List.length sources)
@@ -52,9 +60,10 @@ struct
             ) sources )
       ) doc ; table
 
+
   (** Iteration which catches common values in
-      [doc] and [src] at [(i,j)] *)
-  let rec iter_diagonal tab (i,j) doc src = 
+      [doc] and [src] at position (i,j) *)
+  let rec iter_diagonal tab (i,j) (doc:E.t list) (src:E.t list) = 
     match (doc,src) with
     | ([], _) | (_, []) -> []
     | _ when give_tab_value tab (i,j) = 0 -> []
@@ -63,7 +72,38 @@ struct
         l1::(iter_diagonal tab (i+1,j+1) t1 t2)
       )
 
-  (* Print for debug *)
+
+  (** Add a value to an index_string list *)
+  let create_index index (i,j) (add:E.t list) = 
+    index@[{depot = add ; pos_doc = i ; pos_src = j }] 
+
+
+  (** Find the match between strings in [docs] and [sources],
+      and store them *)
+  let find_all_matches docs sources =
+    let tab = fill_array docs sources in
+    let rec travel doc src (i,j) index = 
+      match doc with
+      | [] -> index
+      | h::doc_r-> (
+          match src with
+          | [] -> travel doc_r sources (i+1,0) index
+          | he::src_r -> 
+            if give_tab_value tab (i,j) != 0 then
+              iter_diagonal tab (i,j) doc src 
+              |> create_index index (i,j) 
+              |> travel doc src_r (i,j+1) 
+            else
+              travel doc src_r (i,j+1) index   
+        )
+    in travel docs sources (0,0) []
+
+
+
+
+  (**** Print for debug ****)
+
+  (** Print an array *)
   let print_array tab = 
     Array.iter (function e -> (
           Array.iter (function e2 ->
@@ -71,21 +111,47 @@ struct
             ) e ; Format.printf "\n"
         )) tab
 
+  (* Print a [list] of type E  *)     
+  let print_E_list (list : E.t list) = 
+    begin
+      Format.printf "[" ;
+      List.iter (fun e -> Format.printf "%s, " (E.get_str e) ) list ;
+      Format.printf "]\n"
+    end
+
+  (* Print an index_string list *)
+  let print_list (list : index_string list) =
+    begin
+      Format.printf "[\n" ;
+      List.iter (fun e -> print_E_list e.depot ) list ;
+      Format.printf "]\n"
+    end
+
 end
 
-(** Module with string simplify with trim *)
-module PureString = 
+
+(** Module for using string simplify with trim *)
+module PureString  = 
 struct
   type t = string
 
   let equal str1 str2 = 
     (String.trim str1) = (String.trim str2)
 
+  let get_str str = str;;
+
 end
 
-(** Default module*)
+
+(** Default module *)
 include Make(PureString)
 
-(* An exemple => *)
-let () = fill_array ["Hello" ; "Bye" ; "End"] ["Hello" ; "End" ; "Bye"] |> print_array
+
+(* An exemple *)
+let doc = ["None" ; "End" ; "Bye" ; "Bye" ; "Hello"]
+let src = ["Hello" ; "End" ; "Hello" ; "Bye" ;"Bye";"None" ; "End"]
+let table = fill_array doc src 
+let () = print_array table
+let match_string = find_all_matches doc src 
+let () = print_list match_string
 
