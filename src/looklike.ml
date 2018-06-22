@@ -5,6 +5,7 @@ module type EqType =
 sig
   type t
   val equal : t -> t -> bool
+  val nil : t 
   val get_str : t -> string
 end
 
@@ -20,8 +21,6 @@ struct
     pos_doc :int ;
     pos_src :int 
   }
-
-
 
   (** tell if [x] is in [tab] bounds *)
   let in_array_bound tab x =
@@ -92,7 +91,7 @@ struct
              at the beginning of the next line *)
           | [] -> travel doc_r sources (i+1,0) index 
           | he::src_r -> (
-              if give_tab_value tab (i,j) != 0 then
+              if (give_tab_value tab (i,j) != 0 ) && not (E.equal he E.nil) then
                 iter_diagonal tab (i,j) doc src |> create_index index (i,j) 
               else index ) 
               |> travel doc src_r (i,j+1)  
@@ -109,6 +108,8 @@ struct
     (String.trim str1) = (String.trim str2)
 
   let get_str str = str;;
+
+  let nil = ""
 
 end
 
