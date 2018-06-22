@@ -28,7 +28,8 @@ struct
     x >= 0 && x < (Array.length tab)
 
 
-  (** give the value at position [i],[j] in [tab] *)
+  (** give the value at position [i],[j] in [tab].
+      If position is out-of-bounds return 0 *)
   let give_tab_value tab (i,j)=
     if (in_array_bound tab i) && (in_array_bound tab.(i) j)
     then tab.(i).(j)
@@ -67,7 +68,7 @@ struct
     match (doc,src) with
     | ([], _) | (_, []) -> []
     | _ when give_tab_value tab (i,j) = 0 -> []
-    | ( l1::t1, l2::t2 ) -> (
+    | ( l1::t1, _::t2 ) -> (
         update_value tab (i,j) false ; 
         l1::(iter_diagonal tab (i+1,j+1) t1 t2)
       )
@@ -75,7 +76,7 @@ struct
 
   (** Add a value to an index_string list *)
   let create_index index (i,j) (add:E.t list) = 
-    index@[{depot = add ; pos_doc = i ; pos_src = j }] 
+    {depot = add ; pos_doc = i ; pos_src = j }::index
 
 
   (** Find the match between strings in [docs] and [sources],
@@ -87,16 +88,15 @@ struct
       | [] -> index
       | h::doc_r-> (
           match src with
-          | [] -> travel doc_r sources (i+1,0) index
-          | he::src_r -> 
-            if give_tab_value tab (i,j) != 0 then
-              iter_diagonal tab (i,j) doc src 
-              |> create_index index (i,j) 
-              |> travel doc src_r (i,j+1) 
-            else
-              travel doc src_r (i,j+1) index   
-        )
-    in travel docs sources (0,0) []
+          (* When it arrives at the end of the line, it relaunches the algorithm
+             at the beginning of the next line *)
+          | [] -> travel doc_r sources (i+1,0) index 
+          | he::src_r -> (
+              if give_tab_value tab (i,j) != 0 then
+                iter_diagonal tab (i,j) doc src |> create_index index (i,j) 
+              else index ) 
+              |> travel doc src_r (i,j+1)  
+        ) in travel docs sources (0,0) [] |> List.rev
 
 
 
@@ -149,7 +149,7 @@ include Make(PureString)
 
 (* An exemple *)
 let doc = ["None" ; "End" ; "Bye" ; "Bye" ; "Hello"]
-let src = ["Hello" ; "End" ; "Hello" ; "Bye" ;"Bye";"None" ; "End"]
+let src = ["Hello" ; "End" ; "Bye" ;"Bye";"None" ; "End"]
 let table = fill_array doc src 
 let () = print_array table
 let match_string = find_all_matches doc src 
