@@ -97,36 +97,6 @@ struct
               else index ) 
               |> travel doc src_r (i,j+1)  
         ) in travel docs sources (0,0) [] |> List.rev
-
-
-
-
-  (**** Print for debug ****)
-
-  (** Print an array *)
-  let print_array tab = 
-    Array.iter (function e -> (
-          Array.iter (function e2 ->
-              Format.printf "%d " e2
-            ) e ; Format.printf "\n"
-        )) tab
-
-  (* Print a [list] of type E  *)     
-  let print_E_list (list : E.t list) = 
-    begin
-      Format.printf "[" ;
-      List.iter (fun e -> Format.printf "%s, " (E.get_str e) ) list ;
-      Format.printf "]\n"
-    end
-
-  (* Print an index_string list *)
-  let print_list (list : index_string list) =
-    begin
-      Format.printf "[\n" ;
-      List.iter (fun e -> print_E_list e.depot ) list ;
-      Format.printf "]\n"
-    end
-
 end
 
 
@@ -145,13 +115,3 @@ end
 
 (** Default module *)
 include Make(PureString)
-
-
-(* An exemple *)
-let doc = ["None" ; "End" ; "Bye" ; "Bye" ; "Hello"]
-let src = ["Hello" ; "End" ; "Bye" ;"Bye";"None" ; "End"]
-let table = fill_array doc src 
-let () = print_array table
-let match_string = find_all_matches doc src 
-let () = print_list match_string
-
