@@ -96,6 +96,31 @@ struct
               else index ) 
               |> travel doc src_r (i,j+1)  
         ) in travel docs sources (0,0) [] |> List.rev
+
+
+  (** Get the head of the list *)
+  let get_first_line = function
+    | [] -> ""
+    | h::_ -> E.get_str h
+
+
+  (** Create a tuple to insert into the documentation *)
+  let create_ref src size index = 
+    (get_first_line index.depot ,"<!-- distar:" ^ src ^
+                                 ":" ^ (string_of_int (index.pos_doc + 1)) ^
+                                 ":" ^ (string_of_int size) ^ " -->")
+
+
+  (** Create all the references needed to be add
+      to the documentation *)
+  let prepare_ref src list =
+    let rec prepare_aux src list acc =
+      match list with 
+      | [] -> acc
+      | head::tail -> (create_ref src (List.length head.depot) head)::acc
+                      |> prepare_aux src tail 
+    in prepare_aux src list []
+
 end
 
 
