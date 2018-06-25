@@ -33,10 +33,10 @@ let write_in file new_content =
   let f_out = open_out file
   in
   List.iter (
-    function line ->
+    fun line ->
       output_string f_out line ;
       output_char f_out '\n';
-  ) new_content
+  ) new_content ; close_out f_out
 
 
 (* Change the [content] list with a pair list of 
