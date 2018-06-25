@@ -9,19 +9,17 @@ sig
   val get_str : t -> string
 end
 
-
-(** module for looklike to find similarity between list *)
-module Make (E : EqType) =
-struct
-
-
   (** OCaml type to get pattern and its position *)
-  type index_string = {
-    depot : E.t list;
+  type 'a index_string = {
+    depot : 'a list;
     pos_doc :int ;
     pos_src :int 
   }
 
+
+(** module for looklike to find similarity between list *)
+module Make (E : EqType) =
+struct
   (** tell if [x] is in [tab] bounds *)
   let in_array_bound tab x =
     x >= 0 && x < (Array.length tab)
@@ -107,7 +105,7 @@ struct
   (** Create a tuple to insert into the documentation *)
   let create_ref src size index = 
     (get_first_line index.depot ,"<!-- distar:" ^ src ^
-                                 ":" ^ (string_of_int (index.pos_doc + 1)) ^
+                                 ":" ^ (string_of_int (index.pos_src + 1)) ^
                                  ":" ^ (string_of_int size) ^ " -->")
 
 
