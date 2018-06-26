@@ -1,6 +1,7 @@
 (** Looklike allows you to find recurrent patterns in some lists *)
 
-(** module type which allows comparing elements *)
+
+(** Module type which allows comparing elements *)
 module type EqType = 
 sig
   type t
@@ -9,15 +10,18 @@ sig
   val get_str : t -> string
 end
 
-  (** OCaml type to get pattern and its position *)
-  type 'a index_string = {
-    depot : 'a list;
-    pos_doc :int ;
-    pos_src :int 
-  }
 
 
-(** module for looklike to find similarity between list *)
+(** OCaml type to get pattern and its position *)
+type 'a index_string = {
+  depot : 'a list;
+  pos_doc :int ;
+  pos_src :int 
+}
+
+
+
+(** Module for looklike to find similarity between list *)
 module Make (E : EqType) =
 struct
   (** tell if [x] is in [tab] bounds *)
@@ -25,7 +29,7 @@ struct
     x >= 0 && x < (Array.length tab)
 
 
-  (** give the value at position [i],[j] in [tab].
+  (** Give the value at position [i],[j] in [tab].
       If position is out-of-bounds return 0 *)
   let give_tab_value tab (i,j)=
     if (in_array_bound tab i) && (in_array_bound tab.(i) j)
@@ -33,7 +37,7 @@ struct
     else 0
 
 
-  (** update [tab] value at position [i][j]. If
+  (** Update [tab] value at position [i][j]. If
       [update] is false, it resets the value *)
   let update_value tab (i,j) update =
     if update then
@@ -42,12 +46,12 @@ struct
       tab.(i).(j) <- 0
 
 
-  (** create an array with size [x] [y] *)
+  (** Create an array with size [x] [y] *)
   let create_tab x y = 
     Array.make_matrix x y 0
 
 
-  (** create and fill the array with the match between 
+  (** Create and fill the array with the match between 
       [doc] and [source] *)
   let fill_array doc sources =
     let table = create_tab (List.length doc) (List.length sources)
@@ -101,29 +105,39 @@ struct
     | [] -> ""
     | h::_ -> E.get_str h
 
+  (** Show which [source] matches with [target] and where. *)
+  let show_ref doc line source line_source size = 
+    Format.printf "* %s, l%d --> %s, l%d, %d line high\n" doc line source line_source size
 
-  (** Create a tuple to insert into the documentation *)
-  let create_ref src size index = 
+
+  (** Create a tuple to insert into the documentation [doc].
+      If [verbose], it shows reference(s) added *)
+  let create_ref verbose doc src size index = 
+    let () = if verbose then show_ref doc (index.pos_doc+1) src (index.pos_src+1) size
+    in
     (get_first_line index.depot ,"<!-- distar:" ^ src ^
                                  ":" ^ (string_of_int (index.pos_src + 1)) ^
                                  ":" ^ (string_of_int size) ^ " -->")
 
 
   (** Create all the references needed to be add
-      to the documentation *)
-  let prepare_ref src list =
+      to the documentation. If [verbose], it shows reference(s) added *)
+  let prepare_ref  verbose doc src list =
+    let () = if verbose then Format.printf "Add reference(s):\n"
+    in 
     let rec prepare_aux src list acc =
       match list with 
       | [] -> acc
-      | head::tail -> (create_ref src (List.length head.depot) head)::acc
+      | head::tail -> (create_ref verbose doc src (List.length head.depot) head)::acc
                       |> prepare_aux src tail 
     in prepare_aux src list []
+
 
 end
 
 
 (** Module for using string simplify with trim *)
-module PureString  = 
+module TrimString  = 
 struct
   type t = string
 
@@ -138,4 +152,4 @@ end
 
 
 (** Default module *)
-include Make(PureString)
+include Make(TrimString)

@@ -1,15 +1,17 @@
 open Cmdliner
 
-(* Print argument values *)
+
+(** Print argument values *)
 let print_files sources target =
   Format.printf "distar\n\
                  |-source(s): %s\n\
                  |-target: %s\n"
     (String.concat " / " sources) target
 
+
 (** Launch distar add references from [sources]
     into [target].*)
-let distar_track sources target = 
+let distar_track verbose sources target = 
   let doc = Typewriter.lines_from target
   in 
   let rec distar_aux = function
@@ -17,32 +19,36 @@ let distar_track sources target =
     | source::others ->
       let src = Typewriter.lines_from source in
       let insert = Looklike.find_all_matches doc src in 
-      let ref = Looklike.prepare_ref source insert  in (
+      let ref = Looklike.prepare_ref verbose target source insert  in (
         Typewriter.update_list_with doc ref |> Typewriter.write_in target ;
         distar_aux others
       ) 
     in distar_aux sources
 
+
 (* Print wrong target error with cmdliner style *)
 let target_error target =
   "DEST... arguments: no `"^target^"' file or directory\n"
+
 
 (* Describe distar usages *)
 let usage () = 
   "\rUsage: distar [OPTION]... SOURCE... DEST\n\
    \rTry `distar --help' for more information.\n"
 
+
 (* Print the value of the arguments passed through the command line
-   with [sources] and [target] *)
-let distar track prompt sources target =
+   with [sources] and [target]. If [verbose], it shows content of actions. *)
+let distar track verbose sources target =
   if not (Sys.file_exists target) then
     `Error (false, (target_error target)^(usage ()))
   else if track then
-    `Ok (distar_track sources target)  
-  else if prompt then
+    `Ok (distar_track verbose sources target)  
+  else if verbose then
     `Ok  (print_files sources target)
   else
     `Ok (Format.printf "Ok\n")
+
 
 (* Describe how sources must be read from the command line *)
 let sources =
