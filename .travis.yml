@@ -1,6 +1,6 @@
 language: c
 sudo: required
-install: sudo apt-get install ocaml
+install: sudo apt-get install ocaml source
 script: sh .travis.sh
 os: linux
 env:
