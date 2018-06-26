@@ -58,7 +58,8 @@ struct
     in 
     List.iteri (fun i e1 -> (
           List.iteri (fun j e2 -> (
-                E.equal e1 e2 |> update_value table (i,j))
+                E.equal e1 e2 
+                |> update_value table (i,j))
             ) sources )
       ) doc ; table
 
@@ -94,16 +95,11 @@ struct
           | [] -> travel doc_r sources (i+1,0) index 
           | he::src_r -> (
               if (give_tab_value tab (i,j) != 0 ) && not (E.equal he E.nil) then
-                iter_diagonal tab (i,j) doc src |> create_index index (i,j) 
-              else index ) 
-              |> travel doc src_r (i,j+1)  
+                iter_diagonal tab (i,j) doc src 
+                |> create_index index (i,j) 
+              else index 
+            ) |> travel doc src_r (i,j+1)  
         ) in travel docs sources (0,0) [] |> List.rev
-
-
-  (** Get the head of the list *)
-  let get_first_line = function
-    | [] -> ""
-    | h::_ -> E.get_str h
 
   (** Show which [source] matches with [target] and where. *)
   let show_ref doc line source line_source size = 
@@ -113,18 +109,17 @@ struct
   (** Create a tuple to insert into the documentation [doc].
       If [verbose], it shows reference(s) added *)
   let create_ref verbose doc src size index = 
-    let () = if verbose then show_ref doc (index.pos_doc+1) src (index.pos_src+1) size
-    in
-    (get_first_line index.depot ,"<!-- distar:" ^ src ^
-                                 ":" ^ (string_of_int (index.pos_src + 1)) ^
-                                 ":" ^ (string_of_int size) ^ " -->")
+    if verbose then show_ref doc (index.pos_doc+1) src (index.pos_src+1) size ;
+    (
+      index.pos_doc ,
+      Format.sprintf "<!-- distar:%s:%d:%d -->" src (index.pos_src + 1) size
+    )
 
 
   (** Create all the references needed to be add
       to the documentation. If [verbose], it shows reference(s) added *)
   let prepare_ref  verbose doc src list =
-    let () = if verbose then Format.printf "Add reference(s):\n"
-    in 
+    if verbose then Format.printf "Add reference(s):\n" ;
     let rec prepare_aux src list acc =
       match list with 
       | [] -> acc

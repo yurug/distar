@@ -17,7 +17,6 @@ doc:
 # Launch tests
 check:  
 	@jbuilder build @runtest
-	@make clean 1> /dev/null
 
 # Clean links and repositories
 clean: 

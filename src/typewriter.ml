@@ -1,6 +1,7 @@
 (* Tell if two strings are equals *)
 let equal str1 str2 = 
- (String.trim str1) = (String.trim str2)
+  (String.trim str1) = (String.trim str2)
+
 
 (* get a string list corresponding to the [file]
    content *)
@@ -8,25 +9,24 @@ let lines_from file =
   let f_in = open_in file in
   let rec get_lines lines =
     try
-      lines@[input_line f_in] |> get_lines 
+      lines@[input_line f_in] 
+      |> get_lines 
     with End_of_file -> close_in f_in ; lines
   in
   get_lines []
 
 
-(* search [expr] in [content] string list and
-   add [new_line] above [expr] *)
-let search_and_add expr new_line content  =
-  let rec search_aux acc = function
-    | [] -> acc
-    | line::lines ->
-      if equal line expr then
-        search_aux (acc @ [new_line] @ [line]) lines
-      else
-        search_aux (acc @ [line]) lines
-  in
-  search_aux [] content
-    
+(* Insert [to_insert] reference(s) into [content] *)
+let search_and_add content to_insert =
+  let rec search_aux no = function
+    | [] -> []
+    | line::lines -> (
+        match List.find_opt (fun (i,str) -> i = no) to_insert with
+        | None -> line:: (search_aux (no+1) lines)
+        | Some (_,new_line) -> new_line::line::search_aux (no+1) lines
+      )
+  in search_aux 0 content
+
 
 (* write the [new_content] in the [file] *)
 let write_in file new_content =
@@ -39,15 +39,8 @@ let write_in file new_content =
   ) new_content ; close_out f_out
 
 
-(* Change the [content] list with a pair list of 
-   expressions and new lines *)
-let rec update_list_with content = function
-  | [] -> content
-  | (expr, new_line)::t
-    -> update_list_with (search_and_add expr new_line content) t
-
 (* update the [file] with [addition] which are pairs of 
    expressions and new lines *)
 let update_file addition file =
   let content = lines_from file in
-  update_list_with content addition |> write_in file
+  search_and_add content addition |> write_in file

@@ -19,11 +19,12 @@ let distar_track verbose sources target =
     | source::others ->
       let src = Typewriter.lines_from source in
       let insert = Looklike.find_all_matches doc src in 
-      let ref = Looklike.prepare_ref verbose target source insert  in (
-        Typewriter.update_list_with doc ref |> Typewriter.write_in target ;
+      let addition = Looklike.prepare_ref verbose target source insert  
+      in (
+        Typewriter.update_file addition target;
         distar_aux others
       ) 
-    in distar_aux sources
+  in distar_aux sources
 
 
 (* Print wrong target error with cmdliner style *)
