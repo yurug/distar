@@ -5,7 +5,8 @@ cd "$(dirname "$0")"
 progdir="../../bin/"
 
 # Code used when the script ends
-source "../error.sh"
+# source "../error.sh"
+. ../error.sh
 
 # Code used when the script ends
 error_code=0
