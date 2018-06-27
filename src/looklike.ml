@@ -12,16 +12,19 @@ end
 
 
 
-(** OCaml type to get pattern and its position *)
+(** OCaml type to get pattern and its position.
+    [content] is a list of object matched in documentation and source 
+    [pos_doc] is the position in documentation where the match begins 
+    [pos_src] is the position in source where the match begins *)
 type 'a index_string = {
-  depot : 'a list;
-  pos_doc :int ;
-  pos_src :int 
+  content : 'a list;
+  pos_doc : int ;
+  pos_src : int 
 }
 
 
 
-(** Module for looklike to find similarity between list *)
+(** Module for looklike to find similarity between lists *)
 module Make (E : EqType) =
 struct
   (** tell if [x] is in [tab] bounds *)
@@ -78,7 +81,7 @@ struct
 
   (** Add a value to an index_string list *)
   let create_index index (i,j) (add:E.t list) = 
-    {depot = add ; pos_doc = i ; pos_src = j }::index
+    {content = add ; pos_doc = i ; pos_src = j }::index
 
 
   (** Find the match between strings in [docs] and [sources],
@@ -123,7 +126,7 @@ struct
     let rec prepare_aux src list acc =
       match list with 
       | [] -> acc
-      | head::tail -> (create_ref verbose doc src (List.length head.depot) head)::acc
+      | head::tail -> (create_ref verbose doc src (List.length head.content) head)::acc
                       |> prepare_aux src tail 
     in prepare_aux src list []
 
