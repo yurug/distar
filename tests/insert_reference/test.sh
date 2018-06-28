@@ -5,7 +5,6 @@ cd "$(dirname "$0")"
 progdir="../../bin/"
 
 # Code used when the script ends
-# source "../error.sh"
 . ../error.sh
 
 # Verify the differences between two files and 
