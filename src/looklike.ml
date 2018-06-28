@@ -107,7 +107,7 @@ struct
 
   (** Show which [source] matches with [target] and where. *)
   let show_ref doc line source line_source size = 
-    Format.printf "* %s, l%d --> %s, l%d, %d line high\n" doc line source line_source size
+    Format.printf "%s:%d, reference %s:%d:%d \n" doc line source line_source size
 
 
   (** Create a tuple to insert into the documentation [doc].
@@ -123,7 +123,7 @@ struct
   (** Create all the references needed to be add
       to the documentation. If [verbose], it shows reference(s) added *)
   let prepare_ref  verbose doc src list =
-    if verbose then Format.printf "Add reference(s):\n" ;
+    if verbose then Format.printf "Reference(s)\n" ;
     let rec prepare_aux src list acc =
       match list with 
       | [] -> acc

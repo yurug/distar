@@ -1,2 +1,2 @@
-Add reference(s):
-* target.html, l10 --> source.ml, l3, 1 line high
+Reference(s)
+target.html:10, reference source.ml:3:1
