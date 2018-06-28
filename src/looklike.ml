@@ -1,15 +1,16 @@
 (** Looklike allows you to find recurrent patterns in some lists *)
 
 
-(** Module type which allows comparing elements *)
-module type EqType = 
-sig
+
+(** Module type to compare objects
+    [t] is the generic type
+    [equal] returns true if objects are equals
+    [nil] is the neutral element. For instance 0 or "" *)
+module type Equal = sig
   type t
   val equal : t -> t -> bool
-  val nil : t 
-  val get_str : t -> string
-end
-
+  val nil : t
+end 
 
 
 (** OCaml type to get pattern and its position.
@@ -25,7 +26,7 @@ type 'a index_string = {
 
 
 (** Module for looklike to find similarity between lists *)
-module Make (E : EqType) =
+module Make (E : Equal) =
 struct
   (** tell if [x] is in [tab] bounds *)
   let in_array_bound tab x =
@@ -141,8 +142,6 @@ struct
 
   let equal str1 str2 = 
     (String.trim str1) = (String.trim str2)
-
-  let get_str str = str;;
 
   let nil = ""
 
