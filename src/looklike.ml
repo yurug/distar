@@ -107,7 +107,7 @@ struct
 
   (** Show which [source] matches with [target] and where. *)
   let show_ref doc line source line_source size = 
-    Format.printf "%s:%d, reference %s:%d:%d \n" doc line source line_source size
+    Format.printf "%s:%d, reference %s:%d#%d \n" doc line source line_source size
 
 
   (** Create a tuple to insert into the documentation [doc].
