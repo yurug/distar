@@ -1,9 +1,4 @@
-(* Tell if two strings are equals *)
-let equal str1 str2 = 
-  (String.trim str1) = (String.trim str2)
-
-
-(* get a string list corresponding to the [file]
+(** Get a string list corresponding to the [file]
    content *)
 let lines_from file =
   let f_in = open_in file in
@@ -16,7 +11,7 @@ let lines_from file =
   get_lines []
 
 
-(* Insert [to_insert] reference(s) into [content] *)
+(** Insert [to_insert] reference(s) into [content] *)
 let search_and_add content to_insert =
   let rec search_aux no = function
     | [] -> []
@@ -28,7 +23,7 @@ let search_and_add content to_insert =
   in search_aux 0 content
 
 
-(* write the [new_content] in the [file] *)
+(** Write the [new_content] in the [file] *)
 let write_in file new_content =
   let f_out = open_out file
   in
@@ -39,7 +34,7 @@ let write_in file new_content =
   ) new_content ; close_out f_out
 
 
-(* update the [file] with [addition] which are pairs of 
+(** Update the [file] with [addition] which are pairs of 
    expressions and new lines *)
 let update_file addition file =
   let content = lines_from file in
