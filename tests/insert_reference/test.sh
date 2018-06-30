@@ -5,8 +5,7 @@ cd "$(dirname "$0")"
 progdir="../../bin/"
 
 # Code used when the script ends
-source "../error.sh"
-
+. ../error.sh
 
 # Verify the differences between two files and 
 compare_file () {
@@ -16,7 +15,7 @@ compare_file () {
 
 # Execute distar command with an existing source and an existing target.
 # The target contains a portion of code from the source.
-"$progdir"/distar --track source.ml target.html > insert_reference.output 2>&1
+"$progdir"/distar --track --verbose source.ml target.html > insert_reference.output 2>&1
 
 
 # Verify if the program stdout prints the right message
