@@ -6,19 +6,19 @@ all: build
 
 # Compile files and prepare installation
 build:
-	jbuilder build @install
+	dune build @install
 	ln -sf _build/install/default/bin bin
 
 # Generate documentation
 doc:
-	jbuilder build @doc
+	dune build @doc
 	ln -sf _build/default/_doc/_html doc
 
 # Launch tests
-check:  
-	@jbuilder build @runtest
+check: clean build 
+	@dune build @runtest
 
 # Clean links and repositories
 clean: 
-	jbuilder clean
+	dune clean
 	rm -f bin doc distar
