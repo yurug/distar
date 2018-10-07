@@ -92,7 +92,7 @@ struct
     let rec travel doc src (i,j) index = 
       match doc with
       | [] -> index
-      | h::doc_r-> (
+      | _::doc_r-> (
           match src with
           (* When it arrives at the end of the line, it relaunches the algorithm
              at the beginning of the next line *)
