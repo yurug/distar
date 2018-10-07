@@ -1,4 +1,0 @@
-(executable
- ((name distar)
-  (public_name distar)
-  (libraries (cmdliner))))
