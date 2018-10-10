@@ -16,7 +16,7 @@ let search_and_add content to_insert =
   let rec search_aux no = function
     | [] -> []
     | line::lines -> (
-        match List.find_opt (fun (i,str) -> i = no) to_insert with
+        match List.find_opt (fun (i,_) -> i = no) to_insert with
         | None -> line:: (search_aux (no+1) lines)
         | Some (_,new_line) -> new_line::line::search_aux (no+1) lines
       )

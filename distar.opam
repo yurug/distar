@@ -10,7 +10,7 @@ authors: [
   
 license: "GPL3"
 depends: [
-  "jbuilder" {build}
+  "dune" {build}
   "odoc" {doc}
   "cmdliner"
 ]

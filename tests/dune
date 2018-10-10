@@ -1,0 +1,5 @@
+(alias
+ (name runtest)
+  (action (run ./test.sh))
+  (deps (source_tree ./)) 
+)
